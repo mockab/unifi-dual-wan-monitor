@@ -5,11 +5,11 @@ WAN1_IFACE="ppp0"
 WAN2_IFACE="eth8"
 
 # Define Uptime Kuma Instance URL
-UPTIME_KUMA_URL="demo.kuma.pet"
+UPTIME_KUMA_URL="https://demo.kuma.pet/api/push"
 
 # Define the unique identifier variables for WAN1 and WAN2
-WAN1_UPTIME_UID="Unique Identifier"  # Replace with your WAN1 unique identifier
-WAN2_UPTIME_UID="Unique Identifier"  # Replace with your WAN2 unique identifier
+WAN1_UPTIME_UID="wan1_unique_identifier"  # Replace with your WAN1 unique identifier
+WAN2_UPTIME_UID="wan2_unique_identifier"  # Replace with your WAN2 unique identifier
 
 # Function to get the first IP in the /24 subnet (always x.x.x.1)
 get_first_ip_in_subnet() {
@@ -30,7 +30,7 @@ monitor_ip() {
     local ip=$1
     local wan_name=$2
     local unique_identifier=$3
-    local curl_url="https://$UPTIME_KUMA_URL/api/push/${unique_identifier}?status=up&msg=OK&ping="
+    local curl_url="${UPTIME_KUMA_URL}/${unique_identifier}?status=up&msg=OK&ping="
 
     # Ping the IP
     if ! ping -c 1 -W 2 "$ip" > /dev/null 2>&1; then
