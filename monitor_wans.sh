@@ -27,7 +27,7 @@ log_message() {
 # Function to get the first IP in the /24 subnet (always x.x.x.1)
 get_first_ip_in_subnet() {
     local ip=$1
-    local first_ip=$(echo "$ip" | awk -F'.' '{print $1"."$2"."$3".1"}')
+    local first_ip=$(echo "$ip" | tr ' ' '\n' | head -n 1 | awk -F'.' '{print $1"."$2"."$3".1"}')
     echo "$first_ip"
 }
 
