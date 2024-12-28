@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Set the WAN interface names
-WAN1_IFACE="ppp0"
-WAN2_IFACE="eth8"
+WAN1_IFACE="WAN1_INTERFACE"
+WAN2_IFACE="WAN2_INTERFACE"
 
 # Define Uptime Kuma Instance URL
 UPTIME_KUMA_URL="https://demo.kuma.pet/api/push"
