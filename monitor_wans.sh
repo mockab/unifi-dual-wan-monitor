@@ -43,7 +43,7 @@ monitor_ip() {
     local ip=$1
     local wan_name=$2
     local unique_identifier=$3
-    local curl_url="${UPTIME_KUMA_URL}/${unique_identifier}?status=up&msg=OK&ping="
+    local curl_url="${UPTIME_KUMA_URL}/${unique_identifier}?status=up&msg=IP+Unreachable&ping="
 
     if ! ping -c 1 -W 2 "$ip" > /dev/null 2>&1; then
         log_message "Ping to $wan_name ($ip) failed. Sending status update."
@@ -53,21 +53,32 @@ monitor_ip() {
     fi
 }
 
+# Function to send status update when WAN IP is not found
+send_ip_not_found_status() {
+    local wan_name=$1
+    local unique_identifier=$2
+    local curl_url="${UPTIME_KUMA_URL}/${unique_identifier}?status=up&msg=No+IP+found&ping=0"
+
+    log_message "$wan_name IP not found. Sending status update."
+    curl -sk "${curl_url}" -o /dev/null
+}
+
 # Get the current IPs for WAN1 and WAN2
 WAN1_IP=$(get_interface_ip "$WAN1_IFACE")
 WAN2_IP=$(get_interface_ip "$WAN2_IFACE")
 
-# If a valid IP is found, calculate the first IP in the subnet (x.x.x.1)
+# Monitor WAN1
 if [[ -n "$WAN1_IP" ]]; then
     WAN1_FIRST_IP=$(get_first_ip_in_subnet "$WAN1_IP")
     monitor_ip "$WAN1_FIRST_IP" "wan1" "$WAN1_UPTIME_UID"
 else
-    log_message "WAN1 IP not found. Skipping..."
+    send_ip_not_found_status "WAN1" "$WAN1_UPTIME_UID"
 fi
 
+# Monitor WAN2
 if [[ -n "$WAN2_IP" ]]; then
     WAN2_FIRST_IP=$(get_first_ip_in_subnet "$WAN2_IP")
     monitor_ip "$WAN2_FIRST_IP" "wan2" "$WAN2_UPTIME_UID"
 else
-    log_message "WAN2 IP not found. Skipping..."
+    send_ip_not_found_status "WAN2" "$WAN2_UPTIME_UID"
 fi
