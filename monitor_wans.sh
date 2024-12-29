@@ -24,17 +24,17 @@ log_message() {
     echo "$(date '+%Y-%m-%d %H:%M:%S') - $message" | tee -a "$LOG_FILE"
 }
 
-# Function to get the first IP in the /24 subnet (always x.x.x.1)
+# Function to get the first IP in the subnet based on cidr
 get_first_ip_in_subnet() {
     local ip=$1
-    local first_ip=$(echo "$ip" | tr ' ' '\n' | head -n 1 | awk -F'.' '{print $1"."$2"."$3".1"}')
-    echo "$first_ip"
+    local host_min=$(ipcalc "$ip" | grep HostMin | awk '{print $2}')
+    echo "$host_min"
 }
 
 # Function to get the current IP for an interface
 get_interface_ip() {
     local iface=$1
-    local ip=$(ip addr show "$iface" | grep "inet " | awk '{print $2}' | cut -d/ -f1)
+    local ip=$(ip addr show "$iface" | grep "inet " | awk '{print $2}')
     echo "$ip"
 }
 
