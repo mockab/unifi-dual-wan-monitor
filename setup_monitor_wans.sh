@@ -6,10 +6,15 @@ OUTPUT_FILE="/tmp/setup_monitor_wans.sh"
 
 # Define the replacements in key-value pairs (original -> replacement)
 declare -A REPLACEMENTS=(
+    ["WAN1_INTERFACE"]="ppp0"
+    ["WAN2_INTERFACE"]="eth8"
     ["demo.kuma.pet"]="replacement_value_1"
     ["wan1_unique_identifier"]="replacement_value_2"
     ["wan2_unique_identifier"]="replacement_value_3"
 )
+
+# Install ipcalc
+apt install -y ipcalc
 
 # Download the raw GitHub script
 echo "Downloading the script from $RAW_URL..."
