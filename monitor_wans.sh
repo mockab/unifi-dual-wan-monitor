@@ -34,7 +34,7 @@ get_first_ip_in_subnet() {
 # Function to get the current IP for an interface
 get_interface_ip() {
     local iface=$1
-    local ip=$(ip addr show "$iface" | grep "inet " | awk '{print $2}')
+    local ip=$(ip addr show "$iface" | grep "inet " | awk '{print $2}' | tr ' ' '\n' | head -n 1)
     echo "$ip"
 }
 
